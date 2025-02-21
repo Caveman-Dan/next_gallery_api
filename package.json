@@ -1,0 +1,26 @@
+{
+  "scripts": {
+    "start": "node --import=tsx next_gallery_cdn.ts",
+    "dev": "nodemon"
+  },
+  "dependencies": {
+    "chalk": "^5.4.1",
+    "cors": "^2.8.5",
+    "directory-tree": "^3.5.2",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "glob": "^10.4.5",
+    "serve-index": "^1.9.1",
+    "uniqid": "^5.4.0"
+  },
+  "devDependencies": {
+    "tsx": "^4.19.2"
+  },
+  "nodemonConfig": {
+    "watch": [
+      "./"
+    ],
+    "ext": "ts",
+    "exec": "npm run start"
+  }
+}
