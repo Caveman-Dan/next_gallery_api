@@ -2,6 +2,7 @@ import "dotenv/config";
 import { glob } from "glob";
 import dirTree from "directory-tree";
 import uniqid from "uniqid";
+import chalk from "chalk";
 
 import { safeUrl } from "./helpers";
 
@@ -55,7 +56,7 @@ export const getImages = async (location) => {
   const globOptions: GlobOptions = { cwd: safeUrlResponse.safeUrl };
   if (!response.error)
     response.images = await glob(`*.*`, globOptions).catch((err) => {
-      console.error("ERROR: ", err);
+      console.error(chalk.redBright("        Glob error: ", err));
       response.status = 500;
       response.error = true;
       response.message = err;
