@@ -2,7 +2,7 @@ import "dotenv/config";
 import express from "express";
 import chalk from "chalk";
 
-import { getAlbums, getImages } from "./lib/fileAccess.ts";
+import { getAlbums, getImages } from "./fileAccess.ts";
 
 const router = express.Router();
 

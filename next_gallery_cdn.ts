@@ -4,7 +4,7 @@ import express from "express";
 import cors from "cors";
 
 import config from "./config.js";
-import router from "./router.js";
+import router from "./lib/router.js";
 import { faviconRequest, logger, acceptedExtensions } from "./lib/middleware.js";
 import errorHandler from "./lib/errorHandler.js";
 
