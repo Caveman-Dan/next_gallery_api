@@ -48,7 +48,11 @@ export const acceptedExtensions = (acceptedExtensions, restrictedEndpoints) => (
   const extensionRejected = !acceptedExtensions.includes(extension.toLocaleLowerCase());
 
   if (restricted && extensionRejected) {
-    res.status(403).send({ message: "Forbidden file!" });
+    console.error(chalk.redBright(`        Forbidden file extension: ${decodeURIComponent(req.path)}`));
+    const err = new Error(`Forbidden file extension: ${decodeURIComponent(req.path)}`);
+    err.statusCode = 403;
+    err.stack = "";
+    next(err);
   }
   next();
 };

@@ -1,36 +1,32 @@
 import "dotenv/config";
 import express from "express";
+import chalk from "chalk";
 
 import { getAlbums, getImages } from "./lib/fileAccess.ts";
 
 const router = express.Router();
 
+// status
 router.get(`/${process.env.GET_STATUS_ENDPOINT}`, (req, res, next) => {
   res.send("status_ok");
 });
 
+// get_albums
 router.get(`/${process.env.GET_ALBUMS_ENDPOINT}`, async (req, res, next) => {
   const albums = await getAlbums();
   res.send(albums);
 });
 
+// get_images
 router.get(`/${process.env.GET_IMAGES_ENDPOINT}`, async (req, res, next) => {
   if (req.query.locate) {
     const imagesResponse = await getImages(req.query.locate);
     if (imagesResponse.error) {
-      switch (imagesResponse.status) {
-        case 400: {
-          res.status(400).send({ message: imagesResponse.message });
-          break;
-        }
-        case 404: {
-          res.status(404).send({ message: imagesResponse.message });
-          break;
-        }
-        case 500: {
-          res.status(500).send({ message: imagesResponse.message });
-        }
-      }
+      console.error(chalk.redBright(`        get_image status: ${imagesResponse.status} - ${imagesResponse.message}`));
+
+      const err = new Error(imagesResponse.message);
+      err.statusCode = imagesResponse.status;
+      next(err);
     } else {
       res.send(imagesResponse.images);
     }
