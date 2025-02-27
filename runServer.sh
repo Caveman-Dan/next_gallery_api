@@ -1,3 +1,3 @@
 #!/bin/bash
 
-node --import=tsx next_gallery_cdn.ts
+node --import=tsx next_gallery_api.ts
