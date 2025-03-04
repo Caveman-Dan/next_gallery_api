@@ -2,8 +2,6 @@ import "dotenv/config";
 import path from "path";
 import chalk from "chalk";
 
-import config from "../config";
-
 export const faviconRequest = (req, res, next) => {
   if (req.originalUrl && req.originalUrl.split("/").pop() === "favicon.ico") {
     console.log(chalk.yellowBright("        No content - favicon.ico"));
