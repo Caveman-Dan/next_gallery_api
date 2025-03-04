@@ -8,7 +8,6 @@ import router from "./lib/router.js";
 import { faviconRequest, logger, acceptedExtensions } from "./lib/middleware.js";
 import errorHandler from "./lib/errorHandler.js";
 
-
 const app = express();
 
 const dir = path.join(__dirname, process.env.IMAGES_FOLDER);
