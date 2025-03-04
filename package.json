@@ -10,6 +10,7 @@
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
     "glob": "^10.4.5",
+    "image-size": "^2.0.0",
     "serve-index": "^1.9.1",
     "uniqid": "^5.4.0"
   },

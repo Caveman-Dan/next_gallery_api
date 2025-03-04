@@ -1,10 +1,15 @@
 import "dotenv/config";
-import { glob } from "glob";
+import { glob, Glob } from "glob";
 import dirTree from "directory-tree";
+import { imageSizeFromFile, setConcurrency } from "image-size/fromFile";
 import uniqid from "uniqid";
 import chalk from "chalk";
 
 import { safeUrl } from "./helpers";
+
+import config from "../config";
+
+setConcurrency(500);
 
 import type { DirectoryTreeCallback } from "directory-tree";
 import type { GlobOptions, Path } from "glob";
@@ -31,7 +36,6 @@ export const getAlbums = async () => {
     () => null,
     directoryCallback
   );
-  // return processDirTree(albumsTree.children);
   return albumsTree;
 };
 
@@ -43,6 +47,7 @@ export const getImages = async (location) => {
     images: null,
   };
 
+  const images = [];
   const safeUrlResponse = safeUrl(`${process.env.IMAGES_FOLDER}`, location);
 
   if (safeUrlResponse.error) {
@@ -51,17 +56,24 @@ export const getImages = async (location) => {
     response.message = safeUrlResponse.message;
   }
 
-  console.log("SafeURL: ", safeUrlResponse.safeUrl);
-
+  // console.log("SafeURL: ", safeUrlResponse.safeUrl);
   const globOptions: GlobOptions = { cwd: safeUrlResponse.safeUrl };
-  if (!response.error)
-    response.images = await glob(`*.*`, globOptions).catch((err) => {
-      console.error(chalk.redBright("        Glob error: ", err));
-      response.status = 500;
+
+  if (!response.error) {
+    const glob1 = new Glob(`*.{${config.httpConfig.acceptedExt.join(",")}}`, globOptions);
+
+    try {
+      for await (const image of glob1) {
+        const details = await imageSizeFromFile(`${safeUrlResponse.safeUrl}/${image}`);
+        images.push({ fileName: image, details });
+      }
+      response.images = images;
+    } catch (err) {
       response.error = true;
+      response.status = 500;
       response.message = err;
-      return null;
-    });
+    }
+  }
 
   if (response.images !== null && response.images.length === 0) {
     response.status = 404;
