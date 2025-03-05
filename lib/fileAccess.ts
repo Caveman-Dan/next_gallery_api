@@ -9,25 +9,27 @@ import { safeUrl } from "./helpers";
 
 import config from "../config";
 
-setConcurrency(500);
-
 import type { DirectoryTreeCallback } from "directory-tree";
 import type { GlobOptions, Path } from "glob";
 
+setConcurrency(500);
+
+const IMAGES_FOLDER = process.env.IMAGES_FOLDER;
+
 const processPath = (path) => {
-  const newPath = path.replace(`${process.env.IMAGES_FOLDER}/`, "");
+  const newPath = path.replace(`${IMAGES_FOLDER}/`, "");
   return newPath;
 };
 
 const directoryCallback: DirectoryTreeCallback = (item) => {
   item.custom = { id: uniqid() };
   item.path = processPath(item.path);
-  if (item.name === process.env.IMAGES_FOLDER) item.name = "root_folder";
+  if (item.name === IMAGES_FOLDER) item.name = "root_folder";
 };
 
 export const getAlbums = async () => {
   const albumsTree = await dirTree(
-    `${process.env.IMAGES_FOLDER}/`,
+    `${IMAGES_FOLDER}/`,
     {
       attributes: ["type"],
       exclude: [/\.DS_Store/],
@@ -48,7 +50,7 @@ export const getImages = async (location) => {
   };
 
   const images = [];
-  const safeUrlResponse = safeUrl(`${process.env.IMAGES_FOLDER}`, location);
+  const safeUrlResponse = safeUrl(`${IMAGES_FOLDER}`, location);
 
   if (safeUrlResponse.error) {
     response.status = 400;
@@ -60,7 +62,12 @@ export const getImages = async (location) => {
   const globOptions: GlobOptions = { cwd: safeUrlResponse.safeUrl };
 
   if (!response.error) {
-    const glob1 = new Glob(`*.{${config.httpConfig.acceptedExt.join(",")}}`, globOptions);
+    const glob1 = new Glob(
+      `*.{${config.httpConfig.acceptedExt.join(",")},${config.httpConfig.acceptedExt
+        .map((item) => item.toUpperCase())
+        .join(",")}}`,
+      globOptions
+    );
 
     try {
       for await (const image of glob1) {
