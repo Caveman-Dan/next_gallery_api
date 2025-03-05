@@ -3,8 +3,8 @@ import { glob, Glob } from "glob";
 import dirTree from "directory-tree";
 import { imageSizeFromFile, setConcurrency } from "image-size/fromFile";
 import uniqid from "uniqid";
-import chalk from "chalk";
 
+import { getBlurImageData } from "./imageProcessing";
 import { safeUrl } from "./helpers";
 
 import config from "../config";
@@ -65,7 +65,8 @@ export const getImages = async (location) => {
     try {
       for await (const image of glob1) {
         const details = await imageSizeFromFile(`${safeUrlResponse.safeUrl}/${image}`);
-        images.push({ fileName: image, details });
+        const placeholder = await getBlurImageData(`${safeUrlResponse.safeUrl}/${image}`);
+        images.push({ fileName: image, details, placeholder });
       }
       response.images = images;
     } catch (err) {
