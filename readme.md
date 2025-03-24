@@ -1,6 +1,6 @@
 # Next Gallery API
 
-This is a remote server designed to handle image functions for [Next Gallery](http://www.waxworlds.org/dan/next_gallery).
+This is a remote server designed to handle image functions for [Next Gallery](http://www.waxworlds.org:8984/dan/next_gallery).
 
 ## Features:
 
