@@ -14,7 +14,7 @@ import type { GlobOptions, Path } from "glob";
 
 setConcurrency(500);
 
-const IMAGES_FOLDER = process.env.IMAGES_FOLDER;
+setConcurrency(Number(MAX_IMAGES_PER_ALBUM));
 
 const processPath = (path) => {
   const newPath = path.replace(`${IMAGES_FOLDER}/`, "");
