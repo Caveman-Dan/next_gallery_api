@@ -2,7 +2,8 @@ import "dotenv/config";
 import { Glob } from "glob";
 import dirTree from "directory-tree";
 import { imageSizeFromFile, setConcurrency } from "image-size/fromFile";
-import uniqid from "uniqid";
+import { v4 as uuidV4 } from "uuid";
+import md5 from "md5";
 
 import { getBlurImageData } from "./imageProcessing";
 import { safeUrl } from "./helpers";
@@ -23,7 +24,7 @@ const processPath = (path) => {
 };
 
 const directoryCallback: DirectoryTreeCallback = (item) => {
-  item.custom = { id: uniqid() };
+  item.custom = { id: uuidV4() };
   item.path = processPath(item.path);
   if (item.name === IMAGES_FOLDER) item.name = "root_folder";
 };
@@ -74,7 +75,8 @@ export const getImages = async (location) => {
       for await (const image of glob1) {
         const details = await imageSizeFromFile(`${safeUrlResponse.safeUrl}/${image}`);
         const placeholder = await getBlurImageData(`${safeUrlResponse.safeUrl}/${image}`);
-        images.push({ fileName: image as string, details, placeholder });
+        const hash = md5(image as string);
+        images.push({ fileName: image as string, md5: hash, details, placeholder });
       }
       response.images = images;
     } catch (err) {

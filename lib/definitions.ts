@@ -9,6 +9,7 @@ type ImageDetails = {
 
 export type ImagesObject = {
   fileName: string;
+  md5: string | number[];
   details: ImageDetails;
   placeholder: BlurImageData;
 };
