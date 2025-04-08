@@ -15,7 +15,7 @@ const httpEndpoints = config.httpConfig.restrictedEndpoints.map((item) =>
   path.join(process.env.API_EXTENSION as string, item as string)
 );
 
-app.use(logger(config.logging, console.log));
+app.use(logger(config.logging.active, config.logging.excludedRoutes, console.log));
 app.use(faviconRequest);
 app.use(express.json());
 app.use(cors());

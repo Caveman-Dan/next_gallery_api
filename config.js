@@ -2,7 +2,10 @@ import "dotenv/config";
 
 export default {
   port: 8983,
-  logging: true,
+  logging: {
+    active: true,
+    excludedRoutes: ["/status"],
+  },
   httpConfig: {
     index: false,
     acceptedExt: ["jpg", "jpeg", "png"],

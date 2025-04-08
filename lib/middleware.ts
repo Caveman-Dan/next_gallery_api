@@ -10,8 +10,8 @@ export const faviconRequest = (req, res, next) => {
   next();
 };
 
-export const logger = (logging, logger) => (req, res, next) => {
-  if (logging) {
+export const logger = (logging, excludedRoutes, logger) => (req, res, next) => {
+  if (logging && !excludedRoutes.includes(req.originalUrl.replace(`/${process.env.API_EXTENSION}`, ""))) {
     const end = res.end;
 
     res.end = (...restArgs) => {
