@@ -5,7 +5,7 @@ source $NVM_DIR/nvm.sh;
 
 cd /home/dan/node/next_gallery_api
 
-nvm use 18 && npm run start
+nvm use 22 && npm run start
 
 npm run start
 

@@ -2,6 +2,8 @@ import "dotenv/config";
 import express from "express";
 import chalk from "chalk";
 
+import { CustomError } from "./definitions.ts";
+
 import { getAlbums, getImages } from "./fileAccess.ts";
 
 const router = express.Router();
@@ -25,7 +27,7 @@ router.get(`/${process.env.GET_IMAGES_ENDPOINT}`, async (req, res, next) => {
       console.error(chalk.redBright(`        get_image status: ${imagesResponse.status} - ${imagesResponse.message}`));
 
       const err = new Error(imagesResponse.message);
-      err.statusCode = imagesResponse.status;
+      (err as CustomError).statusCode = imagesResponse.status;
       next(err);
     } else {
       res.send(imagesResponse.images);

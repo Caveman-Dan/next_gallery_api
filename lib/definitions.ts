@@ -13,3 +13,7 @@ export type ImagesObject = {
   details: ImageDetails;
   placeholder: BlurImageData;
 };
+
+export interface CustomError extends Error {
+  statusCode: number;
+}
