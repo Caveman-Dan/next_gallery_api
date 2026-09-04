@@ -47,7 +47,7 @@ export const getImages = async (location) => {
   };
 
   const images: ImagesObject[] = [];
-  const safeUrlResponse = safeUrl(`${IMAGES_FOLDER}`, location);
+  const safeUrlResponse = await safeUrl(`${IMAGES_FOLDER}`, location);
 
   if (safeUrlResponse.error) {
     response.status = 400;
