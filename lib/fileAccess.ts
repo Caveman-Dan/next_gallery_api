@@ -9,7 +9,7 @@ import { safeUrl } from "./helpers";
 import config from "../config";
 
 import type { DirectoryTreeCallback } from "directory-tree";
-import type { GlobOptions, Path } from "glob";
+import type { GlobOptions } from "glob";
 import type { ImagesObject } from "./definitions";
 
 const { IMAGES_FOLDER } = process.env;
