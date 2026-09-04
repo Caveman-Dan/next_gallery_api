@@ -78,7 +78,7 @@ export const getImages = async (location) => {
     } catch (err) {
       response.error = true;
       response.status = 500;
-      response.message = err instanceof Error ? err.message : String(err);
+      response.message = err;
     }
   }
 
