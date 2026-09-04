@@ -1,5 +1,4 @@
 import sharp from "sharp";
-import fs from "fs/promises";
 
 export type BlurImageData = {
   error: boolean;
@@ -13,8 +12,7 @@ export const getImageDetails = async (filePath: string) => {
 
 export const getBlurImageData = async (filePath: string): Promise<BlurImageData> => {
   try {
-    const imageBuffer = await fs.readFile(filePath);
-    const resizedBuffer = await sharp(imageBuffer).resize(20).toBuffer();
+    const resizedBuffer = await sharp(filePath).resize(20).png().toBuffer();
     return { error: false, blurData: `data:image/png;base64,${resizedBuffer.toString("base64")}` };
   } catch {
     return {
