@@ -24,7 +24,6 @@ const processPath = (path) => {
 };
 
 const directoryCallback: DirectoryTreeCallback = (item) => {
-  item.custom = { id: uuidV4() };
   item.path = processPath(item.path);
   if (item.name === IMAGES_FOLDER) item.name = "root_folder";
 };
