@@ -6,6 +6,11 @@ export type BlurImageData = {
   blurData: string;
 };
 
+export const getImageDetails = async (filePath: string) => {
+  const { width, height, orientation, format } = await sharp(filePath).metadata();
+  return { width, height, orientation, type: format };
+};
+
 export const getBlurImageData = async (filePath: string): Promise<BlurImageData> => {
   try {
     const imageBuffer = await fs.readFile(filePath);

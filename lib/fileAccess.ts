@@ -1,11 +1,9 @@
 import "dotenv/config";
 import { Glob } from "glob";
 import dirTree from "directory-tree";
-import { imageSizeFromFile, setConcurrency } from "image-size/fromFile";
-import { v4 as uuidV4 } from "uuid";
 import md5 from "md5";
 
-import { getBlurImageData } from "./imageProcessing";
+import { getBlurImageData, getImageDetails } from "./imageProcessing";
 import { safeUrl } from "./helpers";
 
 import config from "../config";
@@ -14,9 +12,7 @@ import type { DirectoryTreeCallback } from "directory-tree";
 import type { GlobOptions, Path } from "glob";
 import type { ImagesObject } from "./definitions";
 
-const { IMAGES_FOLDER, MAX_IMAGES_PER_ALBUM } = process.env;
-
-setConcurrency(Number(MAX_IMAGES_PER_ALBUM));
+const { IMAGES_FOLDER } = process.env;
 
 const processPath = (path) => {
   const newPath = path.replace(`${IMAGES_FOLDER}/`, "");
@@ -72,8 +68,9 @@ export const getImages = async (location) => {
 
     try {
       for await (const image of glob1) {
-        const details = await imageSizeFromFile(`${safeUrlResponse.safeUrl}/${image}`);
-        const placeholder = await getBlurImageData(`${safeUrlResponse.safeUrl}/${image}`);
+        const filePath = `${safeUrlResponse.safeUrl}/${image}`;
+        const details = await getImageDetails(filePath);
+        const placeholder = await getBlurImageData(filePath);
         const hash = md5(image as string);
         images.push({ fileName: image as string, md5: hash, details, placeholder });
       }
