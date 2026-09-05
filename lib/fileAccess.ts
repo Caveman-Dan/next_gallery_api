@@ -8,7 +8,7 @@ import dirTree from "directory-tree";
 import md5 from "md5";
 
 import { logError } from "./errorHandling";
-import { getBlurImageData, getImageDetails } from "./imageProcessing";
+import { getBlurImageData, getImageDetails } from "./imageProcessing/imageProcessing";
 import { safeUrl } from "./helpers";
 
 import config from "../config";
