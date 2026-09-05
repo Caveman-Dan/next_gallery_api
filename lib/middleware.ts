@@ -2,7 +2,6 @@ import "dotenv/config";
 import path from "path";
 import chalk from "chalk";
 
-import { logError } from "./errorHandling";
 import type { CustomError } from "./definitions";
 
 export const faviconRequest = (req, res, next) => {
@@ -49,7 +48,6 @@ export const acceptedExtensions = (acceptedExtensions, restrictedEndpoints) => (
   const extensionRejected = !acceptedExtensions.includes(extension.toLocaleLowerCase());
 
   if (restricted && extensionRejected) {
-    logError(`Forbidden file extension: ${decodeURIComponent(req.path)}`);
     const err = new Error(`Forbidden file extension: ${decodeURIComponent(req.path)}`);
     (err as CustomError).statusCode = 403;
     err.stack = "";

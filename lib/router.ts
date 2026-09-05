@@ -1,7 +1,6 @@
 import "dotenv/config";
 import express from "express";
 
-import { logError } from "./errorHandling.ts";
 import { getAlbums, getImages } from "./fileAccess.ts";
 
 import type { CustomError } from "./definitions.ts";
@@ -30,9 +29,11 @@ router.get(`/${process.env.GET_IMAGES_ENDPOINT}`, async (req, res, next) => {
     } else {
       res.send(imagesResponse.images);
     }
-    // need to change this to throw to next() and be collected by error handler middleware
-    // Better still it needs refactoring to respond to dynamic route and remove query param's
-  } else res.status(400).send({ error: true, status: 400, message: "Bad request: missing parameters" });
+  } else {
+    const err = new Error("Bad request: missing parameters");
+    (err as CustomError).statusCode = 400;
+    next(err);
+  }
 });
 
 export default router;
