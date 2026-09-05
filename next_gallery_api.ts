@@ -6,7 +6,7 @@ import cors from "cors";
 import config from "./config.js";
 import router from "./lib/router.js";
 import { faviconRequest, logger, acceptedExtensions } from "./lib/middleware.js";
-import errorHandler from "./lib/errorHandler.js";
+import errorHandler from "./lib/errorHandling.js";
 
 const app: Express = express();
 
