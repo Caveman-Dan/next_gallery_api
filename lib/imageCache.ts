@@ -2,6 +2,7 @@ import fs from "fs/promises";
 import path from "path";
 
 import config from "../config";
+import { logError } from "./errorHandling";
 
 import type { ImagesObject } from "./definitions";
 
@@ -42,8 +43,11 @@ export const readImageCache = async (root: string, albumDir: string, signature: 
       images: ImagesObject[];
     };
     if (parsed.signature === signature && Array.isArray(parsed.images)) return parsed.images;
-  } catch {
-    // cache miss
+  } catch (err) {
+    const code = (err as { code?: string }).code;
+    if (code !== "ENOENT") {
+      logError(`Failed to read image cache: ${err instanceof Error ? err.message : String(err)}`);
+    }
   }
   return null;
 };

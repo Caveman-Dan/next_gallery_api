@@ -13,7 +13,6 @@ import { safeUrl } from "./helpers";
 import config from "../config";
 
 import type { DirectoryTreeCallback } from "directory-tree";
-import type { GlobOptions } from "glob";
 import type { ImagesObject } from "./definitions";
 
 const { IMAGES_FOLDER } = process.env;
@@ -50,7 +49,6 @@ export const getImages = async (location) => {
     images: null,
   };
 
-  // const images: ImagesObject[] = [];
   const safeUrlResponse = await safeUrl(`${IMAGES_FOLDER}`, location);
 
   if (safeUrlResponse.error) {
@@ -59,17 +57,12 @@ export const getImages = async (location) => {
     response.message = safeUrlResponse.message;
   }
 
-  // console.log("SafeURL: ", safeUrlResponse.safeUrl);
-  // const globOptions: GlobOptions = { cwd: safeUrlResponse.safeUrl };
-
   if (!response.error) {
     try {
       const albumDir = safeUrlResponse.safeUrl;
       const root = await fs.realpath(path.resolve(IMAGES_FOLDER as string));
       const signature = await folderSignature(albumDir);
       const cached = await readImageCache(root, albumDir, signature);
-
-      console.log("HERE: ", { albumDir, root, signature, cached });
 
       if (cached) {
         response.images = cached;
@@ -91,7 +84,6 @@ export const getImages = async (location) => {
         }
 
         await writeImageCache(root, albumDir, signature, images);
-        console.log("NOW HERE: ", images);
         response.images = images;
       }
     } catch (err) {
@@ -100,4 +92,12 @@ export const getImages = async (location) => {
       response.message = err instanceof Error ? err.message : String(err);
     }
   }
+
+  if (response.images !== null && response.images.length === 0) {
+    response.status = 404;
+    response.error = true;
+    response.message = "Resource not found";
+  }
+
+  return response;
 };
