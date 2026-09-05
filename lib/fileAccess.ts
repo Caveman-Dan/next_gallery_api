@@ -7,6 +7,7 @@ import { Glob } from "glob";
 import dirTree from "directory-tree";
 import md5 from "md5";
 
+import { logError } from "./errorHandling";
 import { getBlurImageData, getImageDetails } from "./imageProcessing";
 import { safeUrl } from "./helpers";
 
@@ -15,7 +16,8 @@ import config from "../config";
 import type { DirectoryTreeCallback } from "directory-tree";
 import type { ImagesObject } from "./definitions";
 
-const { IMAGES_FOLDER } = process.env;
+const { IMAGES_FOLDER, MAX_IMAGES_PER_ALBUM } = process.env;
+const maxImagesPerAlbum = Number(MAX_IMAGES_PER_ALBUM) || 500;
 
 const processPath = (path) => {
   const newPath = path.replace(`${IMAGES_FOLDER}/`, "");
@@ -65,9 +67,9 @@ export const getImages = async (location) => {
       const cached = await readImageCache(root, albumDir, signature);
 
       if (cached) {
-        response.images = cached;
+        response.images = cached.slice(0, maxImagesPerAlbum);
       } else {
-        const images: ImagesObject[] = [];
+        const names: string[] = [];
         const glob1 = new Glob(
           `*.{${config.httpConfig.acceptedExt.join(",")},${config.httpConfig.acceptedExt
             .map((item) => item.toUpperCase())
@@ -76,11 +78,25 @@ export const getImages = async (location) => {
         );
 
         for await (const image of glob1) {
+          names.push(image as string);
+        }
+        names.sort();
+
+        console.log("NAMES: ", names.length);
+
+        if (names.length > maxImagesPerAlbum) {
+          logError(
+            `Album "${location}" with ${names.length} images, exceeds max images! capping at ${maxImagesPerAlbum}.`
+          );
+        }
+
+        const images: ImagesObject[] = [];
+        for (const image of names.slice(0, maxImagesPerAlbum)) {
           const filePath = `${albumDir}/${image}`;
           const details = await getImageDetails(filePath);
           const placeholder = await getBlurImageData(filePath);
-          const hash = md5(image as string);
-          images.push({ fileName: image as string, md5: hash, details, placeholder });
+          const hash = md5(image);
+          images.push({ fileName: image, md5: hash, details, placeholder });
         }
 
         await writeImageCache(root, albumDir, signature, images);
