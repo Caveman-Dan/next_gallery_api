@@ -1,4 +1,8 @@
 import "dotenv/config";
+
+import path from "path";
+import fs from "fs/promises";
+import { folderSignature, readImageCache, writeImageCache } from "./imageCache";
 import { Glob } from "glob";
 import dirTree from "directory-tree";
 import md5 from "md5";
@@ -46,7 +50,7 @@ export const getImages = async (location) => {
     images: null,
   };
 
-  const images: ImagesObject[] = [];
+  // const images: ImagesObject[] = [];
   const safeUrlResponse = await safeUrl(`${IMAGES_FOLDER}`, location);
 
   if (safeUrlResponse.error) {
@@ -56,37 +60,44 @@ export const getImages = async (location) => {
   }
 
   // console.log("SafeURL: ", safeUrlResponse.safeUrl);
-  const globOptions: GlobOptions = { cwd: safeUrlResponse.safeUrl };
+  // const globOptions: GlobOptions = { cwd: safeUrlResponse.safeUrl };
 
   if (!response.error) {
-    const glob1 = new Glob(
-      `*.{${config.httpConfig.acceptedExt.join(",")},${config.httpConfig.acceptedExt
-        .map((item) => item.toUpperCase())
-        .join(",")}}`,
-      globOptions
-    );
-
     try {
-      for await (const image of glob1) {
-        const filePath = `${safeUrlResponse.safeUrl}/${image}`;
-        const details = await getImageDetails(filePath);
-        const placeholder = await getBlurImageData(filePath);
-        const hash = md5(image as string);
-        images.push({ fileName: image as string, md5: hash, details, placeholder });
+      const albumDir = safeUrlResponse.safeUrl;
+      const root = await fs.realpath(path.resolve(IMAGES_FOLDER as string));
+      const signature = await folderSignature(albumDir);
+      const cached = await readImageCache(root, albumDir, signature);
+
+      console.log("HERE: ", { albumDir, root, signature, cached });
+
+      if (cached) {
+        response.images = cached;
+      } else {
+        const images: ImagesObject[] = [];
+        const glob1 = new Glob(
+          `*.{${config.httpConfig.acceptedExt.join(",")},${config.httpConfig.acceptedExt
+            .map((item) => item.toUpperCase())
+            .join(",")}}`,
+          { cwd: albumDir }
+        );
+
+        for await (const image of glob1) {
+          const filePath = `${albumDir}/${image}`;
+          const details = await getImageDetails(filePath);
+          const placeholder = await getBlurImageData(filePath);
+          const hash = md5(image as string);
+          images.push({ fileName: image as string, md5: hash, details, placeholder });
+        }
+
+        await writeImageCache(root, albumDir, signature, images);
+        console.log("NOW HERE: ", images);
+        response.images = images;
       }
-      response.images = images;
     } catch (err) {
       response.error = true;
       response.status = 500;
       response.message = err instanceof Error ? err.message : String(err);
     }
   }
-
-  if (response.images !== null && response.images.length === 0) {
-    response.status = 404;
-    response.error = true;
-    response.message = "Resource not found";
-  }
-
-  return response;
 };

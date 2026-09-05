@@ -1,4 +1,5 @@
 .DS_Store
 node_modules
 image_store
+image_cache
 .env

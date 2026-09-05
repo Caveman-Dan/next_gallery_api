@@ -1,5 +1,3 @@
-import "dotenv/config";
-
 export default {
   port: 8983,
   logging: {
@@ -10,5 +8,8 @@ export default {
     index: false,
     acceptedExt: ["jpg", "jpeg", "png"],
     restrictedEndpoints: [process.env.GET_IMAGE_ENDPOINT],
+  },
+  cache: {
+    folder: "image_cache",
   },
 };
