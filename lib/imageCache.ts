@@ -2,7 +2,7 @@ import fs from "fs/promises";
 import path from "path";
 
 import config from "../config";
-import { logError } from "./errorHandling";
+import { logError } from "./errorHandler";
 
 import type { ImagesObject } from "./definitions";
 
