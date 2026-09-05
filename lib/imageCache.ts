@@ -58,6 +58,6 @@ export const writeImageCache = async (root: string, albumDir: string, signature:
     await fs.mkdir(path.dirname(file), { recursive: true });
     await fs.writeFile(file, JSON.stringify({ signature, images }));
   } catch (err) {
-    console.error("Failed to write image cache:", err instanceof Error ? err.message : err);
+    logError(`Failed to write image cache: ${err instanceof Error ? err.message : String(err)}`);
   }
 };
