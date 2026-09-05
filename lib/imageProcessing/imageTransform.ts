@@ -22,7 +22,7 @@ export const transformImage = async (req, res, next) => {
   const width = parseWidth(req.query.w);
   if (width === null) {
     const err = new Error(
-      `Transform failed - Bad request: w must be a positive integer (got ${JSON.stringify(req.query.w)}). Maximum is ${
+      `Image Transform - Bad request: w must be a positive integer (got ${JSON.stringify(req.query.w)}). Maximum is ${
         config.transform.maxWidth
       }.`
     );
@@ -42,7 +42,7 @@ export const transformImage = async (req, res, next) => {
   try {
     const srcStat = await fs.stat(safe.safeUrl);
     if (!srcStat.isFile()) {
-      const err = new Error(`Transform failed - Not found: no image at "${relative}"`);
+      const err = new Error(`Image Transform - Not found: no image at "${relative}"`);
       (err as CustomError).statusCode = 404;
       return next(err);
     }
@@ -73,7 +73,7 @@ export const transformImage = async (req, res, next) => {
     return res.sendFile(path.resolve(out), { maxAge: config.httpConfig.maxAge });
   } catch (err) {
     if ((err as { code?: string }).code === "ENOENT") {
-      const notFound = new Error("Transform failed - Resource not found");
+      const notFound = new Error("Image Transform - Resource not found");
       (notFound as CustomError).statusCode = 404;
       return next(notFound);
     }
