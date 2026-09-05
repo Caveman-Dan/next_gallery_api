@@ -5,7 +5,6 @@ import fs from "fs/promises";
 import { folderSignature, readImageCache, writeImageCache } from "./imageCache";
 import { Glob } from "glob";
 import dirTree from "directory-tree";
-import md5 from "md5";
 
 import { logError } from "./errorHandling";
 import { getBlurImageData, getImageDetails } from "./imageProcessing/imageHelpers";
@@ -96,8 +95,7 @@ export const getImages = async (location) => {
           const filePath = `${albumDir}/${image}`;
           const details = await getImageDetails(filePath);
           const placeholder = await getBlurImageData(filePath);
-          const hash = md5(image);
-          images.push({ fileName: image, md5: hash, details, placeholder });
+          images.push({ fileName: image, details, placeholder });
         }
 
         await writeImageCache(root, albumDir, signature, images);

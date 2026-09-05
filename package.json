@@ -10,14 +10,12 @@
     "dotenv": "^17.4.2",
     "express": "^5.2.1",
     "glob": "^13.0.6",
-    "md5": "^2.3.0",
     "serve-index": "^1.9.2",
     "sharp": "^0.35.4"
   },
   "devDependencies": {
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.6",
-    "@types/md5": "^2.3.6",
     "nodemon": "^3.1.14",
     "tsx": "^4.23.13"
   },
