@@ -22,12 +22,17 @@ export const transformImage = async (req, res, next) => {
 
   const width = parseWidth(req.query.w);
   if (width === null) {
-    const err = new Error("Bad request: invalid w");
+    const err = new Error(
+      `Bad request: w must be a positive integer (got ${JSON.stringify(req.query.w)}). Maximum is ${
+        config.transform.maxWidth
+      }.`
+    );
     (err as CustomError).statusCode = 400;
     return next(err);
   }
 
   const relative = decodeURIComponent(req.path).replace(/^\/+/, "");
+
   const safe = await safeUrl(`${IMAGES_FOLDER}`, relative);
   if (safe.error || !safe.safeUrl) {
     const err = new Error(safe.message || "Bad request");
@@ -38,7 +43,7 @@ export const transformImage = async (req, res, next) => {
   try {
     const srcStat = await fs.stat(safe.safeUrl);
     if (!srcStat.isFile()) {
-      const err = new Error("Resource not found");
+      const err = new Error(`Not found: no image at "${relative}"`);
       (err as CustomError).statusCode = 404;
       return next(err);
     }

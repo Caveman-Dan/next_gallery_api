@@ -24,7 +24,6 @@ router.get(`/${process.env.GET_IMAGES_ENDPOINT}`, async (req, res, next) => {
   if (req.query.locate) {
     const imagesResponse = await getImages(req.query.locate);
     if (imagesResponse.error) {
-      logError(`get_image status: ${imagesResponse.status} - ${imagesResponse.message}`);
       const err = new Error(imagesResponse.message);
       (err as CustomError).statusCode = imagesResponse.status;
       next(err);
