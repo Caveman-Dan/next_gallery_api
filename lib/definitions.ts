@@ -1,4 +1,4 @@
-import type { BlurImageData } from "./imageProcessing/imageProcessing";
+import type { BlurImageData } from "./imageProcessing/imageHelpers";
 
 type ImageDetails = {
   height: number | undefined;
