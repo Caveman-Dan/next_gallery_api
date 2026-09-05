@@ -7,6 +7,7 @@ import config from "./config.js";
 import router from "./lib/router.js";
 import { faviconRequest, logger, acceptedExtensions } from "./lib/middleware.js";
 import errorHandler from "./lib/errorHandling.js";
+import { transformImage } from "./lib/imageProcessing/imageTransform.js";
 
 const app: Express = express();
 
@@ -23,6 +24,7 @@ app.use(`/${process.env.API_EXTENSION}`, router);
 app.use(acceptedExtensions(config.httpConfig.acceptedExt, httpEndpoints));
 app.use(
   path.join(`/${process.env.API_EXTENSION}`, process.env.GET_IMAGE_ENDPOINT as string),
+  transformImage,
   express.static(dir, config.httpConfig)
 );
 app.use(errorHandler);

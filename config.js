@@ -19,4 +19,8 @@ export default {
     folder: "image_cache", // name of folder used for image caching
     cacheVersion: 1, // bump version & restart server to refresh image cache
   },
+  transform: {
+    maxWidth: 2560, // Reject / clamp ?w= above this so nobody asks for w=99999.
+    jpegQuality: 80,
+  },
 };
