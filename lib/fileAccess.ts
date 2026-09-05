@@ -24,6 +24,14 @@ const processPath = (path) => {
   return newPath;
 };
 
+const warnIfCapped = (total: number, albumLabel: string, origin: string = "Reading file") => {
+  if (total > maxImagesPerAlbum) {
+    logError(
+      `${origin} - Album "${albumLabel}" with ${total} images, exceeds max images! capping at ${maxImagesPerAlbum}.`
+    );
+  }
+};
+
 const directoryCallback: DirectoryTreeCallback = (item) => {
   item.path = processPath(item.path);
   if (item.name === IMAGES_FOLDER) item.name = "root_folder";
@@ -67,6 +75,7 @@ export const getImages = async (location) => {
       const cached = await readImageCache(root, albumDir, signature);
 
       if (cached) {
+        warnIfCapped(cached.length, location, "Reading cache");
         response.images = cached.slice(0, maxImagesPerAlbum);
       } else {
         const names: string[] = [];
@@ -82,14 +91,6 @@ export const getImages = async (location) => {
         }
         names.sort();
 
-        console.log("NAMES: ", names.length);
-
-        if (names.length > maxImagesPerAlbum) {
-          logError(
-            `Album "${location}" with ${names.length} images, exceeds max images! capping at ${maxImagesPerAlbum}.`
-          );
-        }
-
         const images: ImagesObject[] = [];
         for (const image of names.slice(0, maxImagesPerAlbum)) {
           const filePath = `${albumDir}/${image}`;
@@ -101,6 +102,7 @@ export const getImages = async (location) => {
 
         await writeImageCache(root, albumDir, signature, images);
         response.images = images;
+        warnIfCapped(names.length, location);
       }
     } catch (err) {
       response.error = true;
