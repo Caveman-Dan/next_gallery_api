@@ -13,5 +13,6 @@ export default {
   },
   cache: {
     folder: "image_cache",
+    cacheVersion: 1, // bump version to refresh image cache
   },
 };

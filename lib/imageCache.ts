@@ -39,10 +39,16 @@ export const folderSignature = async (dir: string) => {
 export const readImageCache = async (root: string, albumDir: string, signature: string) => {
   try {
     const parsed = JSON.parse(await fs.readFile(cacheFileFor(root, albumDir), "utf8")) as {
+      cacheVersion: number;
       signature: string;
       images: ImagesObject[];
     };
-    if (parsed.signature === signature && Array.isArray(parsed.images)) return parsed.images;
+    if (
+      parsed.cacheVersion === config.cache.cacheVersion &&
+      parsed.signature === signature &&
+      Array.isArray(parsed.images)
+    )
+      return parsed.images;
   } catch (err) {
     const code = (err as { code?: string }).code;
     if (code !== "ENOENT") {
@@ -56,7 +62,7 @@ export const writeImageCache = async (root: string, albumDir: string, signature:
   try {
     const file = cacheFileFor(root, albumDir);
     await fs.mkdir(path.dirname(file), { recursive: true });
-    await fs.writeFile(file, JSON.stringify({ signature, images }));
+    await fs.writeFile(file, JSON.stringify({ cacheVersion: config.cache.cacheVersion, signature, images }));
   } catch (err) {
     logError(`Failed to write image cache: ${err instanceof Error ? err.message : String(err)}`);
   }
