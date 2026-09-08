@@ -17,10 +17,10 @@ export default {
   },
   cache: {
     folder: "image_cache", // name of folder used for image caching
-    cacheVersion: 1, // bump version & restart server to refresh image cache
+    cacheVersion: 2, // bump version & restart server to refresh image cache
   },
   transform: {
-    maxWidth: 2560, // Reject / clamp ?w= above this so nobody asks for w=99999.
+    allowedWidths: [600, 1600], // prevent DOS by restricting vales, once cached the request is cheap
     jpegQuality: 80,
   },
 };

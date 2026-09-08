@@ -7,13 +7,14 @@ import { safeUrl } from "../helpers";
 import type { CustomError } from "../definitions";
 
 const { IMAGES_FOLDER } = process.env;
+const ALLOWED_WIDTHS = new Set(config.transform.allowedWidths);
 
 const parseWidth = (value: unknown) => {
   const raw = Array.isArray(value) ? value[0] : value;
   if (typeof raw !== "string" && typeof raw !== "number") return null;
   const width = Number.parseInt(String(raw), 10);
-  if (!Number.isFinite(width) || width < 1) return null;
-  return Math.min(width, config.transform.maxWidth);
+  if (!ALLOWED_WIDTHS.has(width)) return null;
+  return width;
 };
 
 export const transformImage = async (req, res, next) => {
@@ -22,9 +23,9 @@ export const transformImage = async (req, res, next) => {
   const width = parseWidth(req.query.w);
   if (width === null) {
     const err = new Error(
-      `Image Transform - Bad request: w must be a positive integer (got ${JSON.stringify(req.query.w)}). Maximum is ${
-        config.transform.maxWidth
-      }.`
+      `Image Transform - Bad request: w must be one of ${config.transform.allowedWidths.join(
+        ", "
+      )} - got ${JSON.stringify(req.query.w)}).`
     );
     (err as CustomError).statusCode = 400;
     return next(err);
