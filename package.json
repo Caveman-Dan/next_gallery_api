@@ -3,7 +3,8 @@
     "start": "node --import=tsx next_gallery_api.ts",
     "dev": "nodemon",
     "typecheck": "tsc --noEmit",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "test": "tsx --test lib/**/*.test.ts"
   },
   "dependencies": {
     "chalk": "^6.0.0",
