@@ -19,6 +19,7 @@ export const logger =
     if (logging && !excludedRoutes.includes(req.originalUrl.replace(`/${process.env.API_EXTENSION}`, ""))) {
       const end = res.end.bind(res);
 
+      // requestData is omitted to avoid logging passwords
       res.end = ((...restArgs: never[]) => {
         log(`
         Request:
@@ -26,7 +27,7 @@ export const logger =
           fromIP: ${req.ip},
           method: ${req.method},
           URI: ${req.originalUrl},
-          requestData: ${JSON.stringify(req.body)},
+          requestData: ${req.method === "GET" ? undefined : "[body omitted]"},
           userAgent: ${req.headers["user-agent"]},
         Response:
           ${
