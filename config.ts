@@ -3,7 +3,7 @@ import "dotenv/config";
 export default {
   port: 8983, // Listening port
   cors: {
-    origin: [process.env.CORS_ORIGIN],
+    origin: [process.env.CORS_ORIGIN].filter(Boolean), // .filter() prevents undefined
   },
   logging: {
     active: true, // enable/disable logging
