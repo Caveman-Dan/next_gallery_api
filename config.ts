@@ -23,4 +23,10 @@ export default {
     allowedWidths: [600, 1600], // prevent DOS by restricting vales, once cached the request is cheap
     jpegQuality: 80,
   },
+  rateLimit: {
+    windowMs: 60_000,
+    api: 300, // all /api
+    getImages: 60, // Sharp metadata + blur
+    transform: 120, // ?w= only; skip plain originals
+  },
 };
