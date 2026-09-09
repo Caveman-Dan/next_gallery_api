@@ -25,7 +25,7 @@ export const transformImage = async (req, res, next) => {
     const err = new Error(
       `Image Transform - Bad request: w must be one of ${config.transform.allowedWidths.join(
         ", "
-      )} - got ${JSON.stringify(req.query.w)}).`
+      )} (got ${JSON.stringify(req.query.w)}).`
     );
     (err as CustomError).statusCode = 400;
     return next(err);
