@@ -4,7 +4,8 @@
     "dev": "nodemon",
     "typecheck": "tsc --noEmit",
     "lint": "eslint .",
-    "test": "tsx --test lib/**/*.test.ts"
+    "test": "tsx --test lib/**/*.test.ts",
+    "prepare": "husky"
   },
   "dependencies": {
     "chalk": "^6.0.0",
@@ -22,6 +23,7 @@
     "@types/express": "^5.0.6",
     "@types/node": "^26.5.0",
     "eslint": "^10.10.0",
+    "husky": "^9.1.7",
     "nodemon": "^3.1.14",
     "tsx": "^4.23.13",
     "typescript": "^5.9.2",
