@@ -1,19 +1,11 @@
 # Next Gallery API
 
-This is a remote server designed to handle image functions for [Next Gallery](http://www.waxworlds.org/dan/next_gallery).
+Remote image server / CDN for [Next Gallery](http://www.waxworlds.org/dan/next_gallery).
 
-## Features:
+## Run
 
-- File operations
-- Image retrieval
-- Image manipulation
-- Security
-  - Address traversal protection
-  - Restricted access
-
-## Coming soon
-
-- Authentication
-- Image uploading
-- Album creation
-- Image list zip & download
+```bash
+cp .env.example .env   # set IMAGES_FOLDER, API_EXTENSION, GET_* endpoints
+npm install
+npm start              # http://localhost:8983
+```
