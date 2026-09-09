@@ -2,6 +2,12 @@ import "dotenv/config";
 
 export default {
   port: 8983, // Listening port
+  cors: {
+    origin: [
+      "http://localhost:8983", // Next `next dev`
+      "https://www.waxworlds.org",
+    ],
+  },
   logging: {
     active: true, // enable/disable logging
     excludedRoutes: ["/status"], // exclude on these routes
