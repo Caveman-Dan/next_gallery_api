@@ -1,12 +1,12 @@
 import "dotenv/config";
 
 export default {
-  port: 8983, // Listening port
+  port: Number(process.env.PORT), // Listening port
   cors: {
     origin: [process.env.CORS_ORIGIN].filter(Boolean), // .filter() prevents undefined
   },
   logging: {
-    active: true, // enable/disable logging
+    active: process.env.LOGGING === "true", // enable/disable logging
     excludedRoutes: ["/status"], // exclude on these routes
   },
   httpConfig: {
@@ -28,7 +28,7 @@ export default {
   },
   rateLimit: {
     windowMs: 60_000, // How long to remember requests for, in milliseconds.
-    trustProxy: false, // When Node sits behind a reverse proxy, use the client IP (not the proxy) for rate limits.
+    trustProxy: process.env.RATE_LIMIT_TRUST_PROXY === "true", // When Node sits behind a reverse proxy, use the client IP (not the proxy) for rate limits.
     api: 300, // all /api
     getImages: 60, // Sharp metadata + blur
     transform: 120, // ?w= only; skip plain originals
