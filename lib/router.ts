@@ -19,14 +19,18 @@ router.get(`/${statusEndpoint}`, (req, res, next) => {
 // get_albums
 router.get(`/${albumsEndpoint}`, async (req, res, next) => {
   const albumsResponse = await getAlbums();
+
   if (albumsResponse.error) {
     const err = new Error(albumsResponse.message);
     (err as CustomError).statusCode = albumsResponse.status;
-    next(err);
+    return next(err);
   } else {
     res.send(albumsResponse.albums);
   }
 });
+
+// Express 5 automatically forwards rejected promises from async handlers to errorHandler.
+// Explicit next(err) is for returned API errors, not thrown ones.
 
 // get_images
 router.get(`/${imagesEndpoint}/*album`, async (req, res, next) => {
