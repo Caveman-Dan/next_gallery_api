@@ -3,10 +3,7 @@ import "dotenv/config";
 export default {
   port: 8983, // Listening port
   cors: {
-    origin: [
-      "http://localhost:8983", // Next `next dev`
-      "https://www.waxworlds.org",
-    ],
+    origin: [process.env.CORS_ORIGIN],
   },
   logging: {
     active: true, // enable/disable logging
