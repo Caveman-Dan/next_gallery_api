@@ -13,6 +13,10 @@ import { transformImage } from "./lib/imageProcessing/imageTransform";
 
 const app: Express = express();
 
+if (config.rateLimit.trustProxy) {
+  app.set("trust proxy", 1);
+}
+
 app.use(helmet());
 
 const { windowMs } = config.rateLimit;

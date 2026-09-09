@@ -24,7 +24,8 @@ export default {
     jpegQuality: 80,
   },
   rateLimit: {
-    windowMs: 60_000,
+    windowMs: 60_000, // How long to remember requests for, in milliseconds.
+    trustProxy: false, // Set true (or 1) when nginx / a reverse proxy sits in front.
     api: 300, // all /api
     getImages: 60, // Sharp metadata + blur
     transform: 120, // ?w= only; skip plain originals
