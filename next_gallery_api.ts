@@ -39,7 +39,7 @@ const httpEndpoints = config.httpConfig.restrictedEndpoints.map((item) =>
 app.use(logger(config.logging.active, config.logging.excludedRoutes, console.log));
 app.use(faviconRequest);
 app.use(express.json());
-app.use(cors({ origin: process.env.CORS_ORIGIN ? [process.env.CORS_ORIGIN] : [] }));
+app.use(cors({ origin: process.env.CORS_ORIGIN }));
 app.use(`/${process.env.API_EXTENSION}`, router);
 app.use(acceptedExtensions(config.httpConfig.acceptedExt, httpEndpoints));
 app.use(
