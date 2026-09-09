@@ -5,15 +5,19 @@ import { getAlbums, getImages } from "./fileAccess.ts";
 
 import type { CustomError } from "./definitions.ts";
 
+const statusEndpoint = process.env.GET_STATUS_ENDPOINT;
+const albumsEndpoint = process.env.GET_ALBUMS_ENDPOINT;
+const imagesEndpoint = process.env.GET_IMAGES_ENDPOINT;
+
 const router = express.Router();
 
 // status
-router.get(`/${process.env.GET_STATUS_ENDPOINT}`, (req, res, next) => {
+router.get(`/${statusEndpoint}`, (req, res, next) => {
   res.send("status_ok");
 });
 
 // get_albums
-router.get(`/${process.env.GET_ALBUMS_ENDPOINT}`, async (req, res, next) => {
+router.get(`/${albumsEndpoint}`, async (req, res, next) => {
   const albumsResponse = await getAlbums();
   if (albumsResponse.error) {
     const err = new Error(albumsResponse.message);
@@ -25,21 +29,24 @@ router.get(`/${process.env.GET_ALBUMS_ENDPOINT}`, async (req, res, next) => {
 });
 
 // get_images
-router.get(`/${process.env.GET_IMAGES_ENDPOINT}`, async (req, res, next) => {
-  if (req.query.locate) {
-    const imagesResponse = await getImages(req.query.locate);
-    if (imagesResponse.error) {
-      const err = new Error(imagesResponse.message);
-      (err as CustomError).statusCode = imagesResponse.status;
-      next(err);
-    } else {
-      res.send(imagesResponse.images);
-    }
-  } else {
-    const err = new Error("Bad request: missing parameters");
+router.get(`/${imagesEndpoint}/*album`, async (req, res, next) => {
+  const album = req.params.album;
+  const locate = Array.isArray(album) ? album.join("/") : album;
+
+  if (!locate) {
+    const err = new Error("Bad request: missing album path");
     (err as CustomError).statusCode = 400;
-    next(err);
+    return next(err);
   }
+
+  const imagesResponse = await getImages(locate);
+  if (imagesResponse.error) {
+    const err = new Error(imagesResponse.message);
+    (err as CustomError).statusCode = imagesResponse.status;
+    return next(err);
+  }
+
+  res.send(imagesResponse.images);
 });
 
 export default router;
