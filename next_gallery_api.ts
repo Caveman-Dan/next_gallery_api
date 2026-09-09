@@ -4,10 +4,10 @@ import express, { Express } from "express";
 import cors from "cors";
 
 import config from "./config";
-import router from "./lib/router.js";
-import { faviconRequest, logger, acceptedExtensions } from "./lib/middleware.js";
-import errorHandler from "./lib/errorHandling.js";
-import { transformImage } from "./lib/imageProcessing/imageTransform.js";
+import router from "./lib/router";
+import { faviconRequest, logger, acceptedExtensions } from "./lib/middleware";
+import errorHandler from "./lib/errorHandling";
+import { transformImage } from "./lib/imageProcessing/imageTransform";
 
 const app: Express = express();
 

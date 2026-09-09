@@ -2,7 +2,8 @@
   "scripts": {
     "start": "node --import=tsx next_gallery_api.ts",
     "dev": "nodemon",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint ."
   },
   "dependencies": {
     "chalk": "^6.0.0",
@@ -18,9 +19,11 @@
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.6",
     "@types/node": "^26.5.0",
+    "eslint": "^10.10.0",
     "nodemon": "^3.1.14",
     "tsx": "^4.23.13",
-    "typescript": "^7.0.2"
+    "typescript": "^5.9.2",
+    "typescript-eslint": "^8.70.0"
   },
   "nodemonConfig": {
     "watch": [
