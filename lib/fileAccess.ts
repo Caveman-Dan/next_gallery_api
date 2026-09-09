@@ -18,8 +18,8 @@ import type { ImagesObject } from "./definitions";
 const { IMAGES_FOLDER, MAX_IMAGES_PER_ALBUM } = process.env;
 const maxImagesPerAlbum = Number(MAX_IMAGES_PER_ALBUM) || 500;
 
-const processPath = (path) => {
-  const newPath = path.replace(`${IMAGES_FOLDER}/`, "");
+const processPath = (itemPath: string) => {
+  const newPath = itemPath.replace(`${IMAGES_FOLDER}/`, "");
   return newPath;
 };
 
@@ -78,7 +78,7 @@ export const getAlbums = async () => {
   return response;
 };
 
-export const getImages = async (location) => {
+export const getImages = async (location: string) => {
   const response: { status: number; error: boolean; message: string; images: ImagesObject[] | null } = {
     status: 200,
     error: false,

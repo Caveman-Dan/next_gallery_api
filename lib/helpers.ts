@@ -8,7 +8,7 @@ const isInside = (root: string, target: string) => {
   return resolvedTarget === resolvedRoot || resolvedTarget.startsWith(prefix);
 };
 
-export const safeUrl = async (prefix, url) => {
+export const safeUrl = async (prefix: string, url: unknown) => {
   const response: { error: boolean; message: string; safeUrl: string } = {
     error: false,
     message: "",

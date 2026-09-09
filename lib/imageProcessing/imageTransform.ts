@@ -4,6 +4,8 @@ import sharp from "sharp";
 
 import config from "../../config";
 import { safeUrl } from "../helpers";
+
+import type { RequestHandler } from "express";
 import type { CustomError } from "../definitions";
 
 const { IMAGES_FOLDER } = process.env;
@@ -17,7 +19,7 @@ const parseWidth = (value: unknown) => {
   return width;
 };
 
-export const transformImage = async (req, res, next) => {
+export const transformImage: RequestHandler = async (req, res, next) => {
   if (req.query.w === undefined) return next();
 
   const width = parseWidth(req.query.w);
