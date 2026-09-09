@@ -25,7 +25,7 @@ export default {
   },
   rateLimit: {
     windowMs: 60_000, // How long to remember requests for, in milliseconds.
-    trustProxy: true, // When Node sits behind a reverse proxy, use the client IP (not the proxy) for rate limits.
+    trustProxy: false, // When Node sits behind a reverse proxy, use the client IP (not the proxy) for rate limits.
     api: 300, // all /api
     getImages: 60, // Sharp metadata + blur
     transform: 120, // ?w= only; skip plain originals
