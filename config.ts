@@ -11,7 +11,7 @@ export default {
     index: false, // Do not serve index.html
     maxAge: "1d", // How long browsers / proxies may reuse the file without asking again
     etag: true, // 304 Not Modified when the file bytes have not changed (If-None-Match)
-    lastMadified: true, // 304 when the file's mtime has not changed (If-Modified-Since)
+    lastModified: true, // 304 when the file's mtime has not changed (If-Modified-Since)
     acceptedExt: ["jpg", "jpeg", "png"], // Allow-list for get_image (acceptedExtensions middleware). Not a serve-static option
     restrictedEndpoints: [process.env.GET_IMAGE_ENDPOINT], // Paths that must go through that allow-list. Not a serve-static option.
   },

@@ -1,9 +1,9 @@
 import "dotenv/config";
 import express from "express";
 
-import { getAlbums, getImages } from "./fileAccess.ts";
+import { getAlbums, getImages } from "./fileAccess";
 
-import type { CustomError } from "./definitions.ts";
+import type { CustomError } from "./definitions";
 
 const statusEndpoint = process.env.GET_STATUS_ENDPOINT;
 const albumsEndpoint = process.env.GET_ALBUMS_ENDPOINT;

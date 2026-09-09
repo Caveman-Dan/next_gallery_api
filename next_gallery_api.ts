@@ -3,7 +3,7 @@ import path from "path";
 import express, { Express } from "express";
 import cors from "cors";
 
-import config from "./config.js";
+import config from "./config";
 import router from "./lib/router.js";
 import { faviconRequest, logger, acceptedExtensions } from "./lib/middleware.js";
 import errorHandler from "./lib/errorHandling.js";
