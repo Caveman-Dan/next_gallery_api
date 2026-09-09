@@ -12,7 +12,7 @@ import { safeUrl } from "./helpers";
 
 import config from "../config";
 
-import type { DirectoryTreeCallback } from "directory-tree";
+import type { DirectoryTree, DirectoryTreeCallback } from "directory-tree";
 import type { ImagesObject } from "./definitions";
 
 const { IMAGES_FOLDER, MAX_IMAGES_PER_ALBUM } = process.env;
@@ -37,17 +37,45 @@ const directoryCallback: DirectoryTreeCallback = (item) => {
 };
 
 export const getAlbums = async () => {
-  const albumsTree = await dirTree(
-    `${IMAGES_FOLDER}/`,
-    {
-      attributes: ["type"],
-      exclude: [/\.DS_Store/],
-      extensions: /a^/, // match nothing to return only directories (anything with no extension)
-    },
-    () => null,
-    directoryCallback
-  );
-  return albumsTree;
+  const response: {
+    status: number;
+    error: boolean;
+    message: string;
+    albums: DirectoryTree | null;
+  } = {
+    status: 200,
+    error: false,
+    message: "",
+    albums: null,
+  };
+
+  try {
+    const albumsTree = await dirTree(
+      `${IMAGES_FOLDER}/`,
+      {
+        attributes: ["type"],
+        exclude: [/\.DS_Store/],
+        extensions: /a^/,
+      },
+      () => null,
+      directoryCallback
+    );
+
+    if (!albumsTree) {
+      response.status = 404;
+      response.error = true;
+      response.message = "Albums folder not found";
+      return response;
+    }
+
+    response.albums = albumsTree;
+  } catch (err) {
+    response.error = true;
+    response.status = 500;
+    response.message = err instanceof Error ? err.message : String(err);
+  }
+
+  return response;
 };
 
 export const getImages = async (location) => {

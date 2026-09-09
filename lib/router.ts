@@ -14,8 +14,14 @@ router.get(`/${process.env.GET_STATUS_ENDPOINT}`, (req, res, next) => {
 
 // get_albums
 router.get(`/${process.env.GET_ALBUMS_ENDPOINT}`, async (req, res, next) => {
-  const albums = await getAlbums();
-  res.send(albums);
+  const albumsResponse = await getAlbums();
+  if (albumsResponse.error) {
+    const err = new Error(albumsResponse.message);
+    (err as CustomError).statusCode = albumsResponse.status;
+    next(err);
+  } else {
+    res.send(albumsResponse.albums);
+  }
 });
 
 // get_images
